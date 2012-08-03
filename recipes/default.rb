@@ -5,9 +5,17 @@ service "ejabberd" do
   supports :restart => true
 end
 
+directory "/etc/ejabberd" do
+  owner "vagrant"
+  mode "0755"
+  action :create
+end
+
 template "/etc/ejabberd/ejabberd.cfg" do
   source "ejabberd.cfg.erb"
-  variables(:jabber_domain => node[:jabber_domain])
+  mode 0755
+  variables :domains => node['domains']
+  action :create
   notifies :restart, resources(:service => "ejabberd")
 end
 
